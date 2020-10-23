@@ -54,6 +54,70 @@
 
 static struct udp_pcb *udpecho_raw_pcb;
 
+struct netif *udpecho_get_current_netif(struct udp_pcb *pcb, const ip_addr_t *dst_ip, u16_t dst_port);
+err_t udpecho_sendto(struct udp_pcb *upcb, struct pbuf *p, const ip_addr_t *addr, u16_t port);
+
+struct netif *udpecho_get_current_netif(struct udp_pcb *pcb, const ip_addr_t *dst_ip, u16_t dst_port)
+{
+  struct netif *netif;
+  LWIP_UNUSED_ARG(dst_port);
+
+  LWIP_DEBUGF(UDP_DEBUG | LWIP_DBG_TRACE, ("udp_send\n"));
+  if (pcb->netif_idx != NETIF_NO_INDEX)
+  {
+    netif = netif_get_by_index(pcb->netif_idx);
+  }
+  else
+  {
+#if LWIP_MULTICAST_TX_OPTIONS
+    netif = NULL;
+    if (ip_addr_ismulticast(dst_ip))
+    {
+      /* For IPv6, the interface to use for packets with a multicast destination
+       * is specified using an interface index. The same approach may be used for
+       * IPv4 as well, in which case it overrides the IPv4 multicast override
+       * address below. Here we have to look up the netif by going through the
+       * list, but by doing so we skip a route lookup. If the interface index has
+       * gone stale, we fall through and do the regular route lookup after all. */
+      if (pcb->mcast_ifindex != NETIF_NO_INDEX)
+      {
+        netif = netif_get_by_index(pcb->mcast_ifindex);
+      }
+#if LWIP_IPV4
+      else
+#if LWIP_IPV6
+          if (IP_IS_V4(dst_ip))
+#endif /* LWIP_IPV6 */
+      {
+        /* IPv4 does not use source-based routing by default, so we use an
+             administratively selected interface for multicast by default.
+             However, this can be overridden by setting an interface address
+             in pcb->mcast_ip4 that is used for routing. If this routing lookup
+             fails, we try regular routing as though no override was set. */
+        if (!ip4_addr_isany_val(pcb->mcast_ip4) &&
+            !ip4_addr_cmp(&pcb->mcast_ip4, IP4_ADDR_BROADCAST))
+        {
+          netif = ip4_route_src(ip_2_ip4(&pcb->local_ip), &pcb->mcast_ip4);
+        }
+      }
+#endif /* LWIP_IPV4 */
+    }
+
+    if (netif == NULL)
+#endif /* LWIP_MULTICAST_TX_OPTIONS */
+    {
+      /* find the outgoing network interface for this packet */
+      netif = ip_route(&pcb->local_ip, dst_ip);
+    }
+  }
+  return netif;
+}
+
+err_t udpecho_sendto(struct udp_pcb *upcb, struct pbuf *p, const ip_addr_t *addr, u16_t port)
+{
+  return udp_sendto_if_src(upcb, p, addr, port, udpecho_get_current_netif(upcb, addr, port), &upcb->local_ip);
+}
+
 static void
 udpecho_raw_recv(void *arg, struct udp_pcb *upcb, struct pbuf *p,
                  const ip_addr_t *addr, u16_t port)
@@ -61,7 +125,7 @@ udpecho_raw_recv(void *arg, struct udp_pcb *upcb, struct pbuf *p,
   LWIP_UNUSED_ARG(arg);
   if (p != NULL) {
     /* send received packet back to sender */
-    udp_sendto(upcb, p, addr, port);
+    udpecho_sendto(upcb, p, addr, port);
     /* free the pbuf */
     pbuf_free(p);
   }

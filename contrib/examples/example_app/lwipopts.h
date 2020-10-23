@@ -39,7 +39,7 @@
 #define LWIP_IPV4                  1
 #define LWIP_IPV6                  1
 
-#define NO_SYS                     0
+#define NO_SYS                     1
 #define LWIP_SOCKET                (NO_SYS==0)
 #define LWIP_NETCONN               (NO_SYS==0)
 #define LWIP_NETIF_API             (NO_SYS==0)
@@ -238,7 +238,7 @@ a lot of data that needs to be copied, this should be set high. */
 /* ---------- DHCP options ---------- */
 /* Define LWIP_DHCP to 1 if you want DHCP configuration of
    interfaces. */
-#define LWIP_DHCP               LWIP_UDP
+#define LWIP_DHCP               0
 
 /* 1 if you want to do an ARP check on the offered address
    (recommended). */
@@ -284,7 +284,7 @@ a lot of data that needs to be copied, this should be set high. */
 
 /* ---------- PPP options ---------- */
 
-#define PPP_SUPPORT             1      /* Set > 0 for PPP */
+#define PPP_SUPPORT             0      /* Set > 0 for PPP */
 
 #if PPP_SUPPORT
 

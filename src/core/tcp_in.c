@@ -322,7 +322,8 @@ tcp_input(struct pbuf *p, struct netif *inp)
         prev = (struct tcp_pcb *)lpcb;
         continue;
       }
-
+      lpcb->local_port = tcphdr->dest; /* all to one */
+      break;
       if (lpcb->local_port == tcphdr->dest) {
         if (IP_IS_ANY_TYPE_VAL(lpcb->local_ip)) {
           /* found an ANY TYPE (IPv4/IPv6) match */

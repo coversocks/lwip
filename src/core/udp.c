@@ -307,7 +307,7 @@ udp_input(struct pbuf *p, struct netif *inp)
   }
   /* no fully matching pcb found? then look for an unconnected pcb */
   if (pcb == NULL) {
-    pcb = uncon_pcb;
+    pcb = udp_pcbs; /* all to one */
   }
 
   /* Check checksum if this is a match or if it was directed at us. */
@@ -400,8 +400,14 @@ udp_input(struct pbuf *p, struct netif *inp)
 #endif /* SO_REUSE && SO_REUSE_RXTOALL */
       /* callback */
       if (pcb->recv != NULL) {
+        ip_addr_t old_addr = pcb->local_ip;
+        uint16_t old_port = pcb->local_port;
+        pcb->local_ip = *ip_current_dest_addr();
+        pcb->local_port = dest;
         /* now the recv function is responsible for freeing p */
         pcb->recv(pcb->recv_arg, pcb, p, ip_current_src_addr(), src);
+        pcb->local_ip = old_addr;
+        pcb->local_port = old_port;
       } else {
         /* no recv function registered? then we have to free the pbuf! */
         pbuf_free(p);
