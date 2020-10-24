@@ -58,7 +58,6 @@ set(LWIP_COMPILER_FLAGS_GNU_CLANG
     -Wcast-align
      $<$<COMPILE_LANGUAGE:C>:-Wmissing-prototypes>
      $<$<COMPILE_LANGUAGE:C>:-Wnested-externs>
-    -Wunreachable-code
     -Wuninitialized
     -Wmissing-prototypes
     -Waggregate-return

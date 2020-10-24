@@ -52,7 +52,7 @@
 #define LWIP_TIMEVAL_PRIVATE 0
 #include <sys/time.h>
 
-#define LWIP_ERRNO_INCLUDE <errno.h>
+#define LWIP_ERRNO_STDINCLUDE
 
 #if defined(LWIP_UNIX_LINUX) || defined(LWIP_UNIX_HURD) || defined(LWIP_UNIX_KFREEBSD)
 #define LWIP_ERRNO_STDINCLUDE	1
@@ -67,9 +67,9 @@ extern unsigned int lwip_port_rand(void);
   handler;}} while(0)
 #endif
 
-#if defined(LWIP_UNIX_ANDROID) && defined(FD_SET)
-typedef __kernel_fd_set fd_set;
-#endif
+// #if defined(LWIP_UNIX_ANDROID) && defined(FD_SET)
+// typedef __kernel_fd_set fd_set;
+// #endif
 
 #if defined(LWIP_UNIX_MACH)
 /* sys/types.h and signal.h bring in Darwin byte order macros. pull the

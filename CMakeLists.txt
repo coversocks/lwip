@@ -13,6 +13,17 @@ if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
   add_subdirectory(${LWIP_DIR}/contrib/ports/win32/example_app)
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux" OR ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
   add_subdirectory(${LWIP_DIR}/contrib/ports/unix/example_app)
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
+  include(${LWIP_DIR}/contrib/ports/CMakeCommon.cmake)
+  set (LWIP_INCLUDE_DIRS
+      "${LWIP_DIR}/src/include"
+      "${LWIP_DIR}/contrib/"
+      "${LWIP_DIR}/contrib/ports/unix/port/include"
+      "${LWIP_DIR}/contrib/examples/example_app"
+  )
+  include(${LWIP_DIR}/src/Filelists.cmake)
+  include(${LWIP_DIR}/contrib/Filelists.cmake)
+  include(${LWIP_DIR}/contrib/ports/unix/Filelists.cmake)
 else()
   message(WARNING "Host ${CMAKE_SYSTEM_NAME} is not supported to build example_app")
 endif()

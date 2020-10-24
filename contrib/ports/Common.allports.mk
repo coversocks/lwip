@@ -38,7 +38,7 @@ CFLAGS+=-g -DLWIP_DEBUG -Wall -pedantic -Werror \
 	-Wextra -Wundef -Wshadow -Wpointer-arith -Wcast-qual \
 	-Wc++-compat -Wwrite-strings -Wold-style-definition -Wcast-align \
 	-Wmissing-prototypes -Wredundant-decls -Wnested-externs \
-	-Wunreachable-code -Wuninitialized -Wmissing-prototypes \
+	-Wuninitialized -Wmissing-prototypes \
 	-Wredundant-decls -Waggregate-return -Wlogical-not-parentheses
 #	-Wconversion -Wsign-compare -Wmissing-include-dirs
 
