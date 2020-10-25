@@ -54,7 +54,7 @@
 #endif
 
 #define LWIP_DNS                   LWIP_UDP
-#define LWIP_MDNS_RESPONDER        LWIP_UDP
+#define LWIP_MDNS_RESPONDER        0
 
 #define LWIP_NUM_NETIF_CLIENT_DATA (LWIP_MDNS_RESPONDER)
 
@@ -212,7 +212,7 @@ a lot of data that needs to be copied, this should be set high. */
 
 
 /* ---------- ARP options ---------- */
-#define LWIP_ARP                1
+#define LWIP_ARP                0
 #define ARP_TABLE_SIZE          10
 #define ARP_QUEUEING            1
 
