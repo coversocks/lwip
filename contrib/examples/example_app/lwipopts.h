@@ -323,4 +323,12 @@ void lwip_platform_assert(const char *msg, int line, const char *file);
 #define LWIP_PLATFORM_ASSERT(x) lwip_platform_assert(x, __LINE__, __FILE__)
 #endif
 
+#include <stdint.h>
+
+extern uint8_t *ram_heap;
+
+#define LWIP_RAM_HEAP_POINTER ram_heap
+
+#define MEMP_MEM_MALLOC 1
+
 #endif /* LWIP_LWIPOPTS_H */
