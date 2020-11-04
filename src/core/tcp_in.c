@@ -725,7 +725,9 @@ tcp_listen_input(struct tcp_pcb_listen *pcb)
       tcp_abandon(npcb, 0);
       return;
     }
-    tcp_output(npcb);
+    /* tcp_output(npcb); */
+    err_t err;
+    TCP_EVENT_ACCEPT(pcb, npcb, pcb->callback_arg, ERR_INPROGRESS, err);
   }
   return;
 }
