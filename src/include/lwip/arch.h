@@ -72,6 +72,18 @@
 #define LWIP_RAND() ((u32_t)rand())
 #endif
 
+#ifndef LWIP_PLATFORM_DIAG
+#if __ANDROID__
+#include <stdio.h>
+#include <android/log.h>
+#define LOG_DEBUG(...) \
+  __android_log_print(ANDROID_LOG_DEBUG, "lwip", __VA_ARGS__)
+#define LOG_ERROR(...) \
+  __android_log_print(ANDROID_LOG_ERROR, "lwip", __VA_ARGS__)
+#define LWIP_PLATFORM_DIAG(x) LOG_DEBUG x
+#endif
+#endif
+
 /** Platform specific diagnostic output.<br>
  * Note the default implementation pulls in printf, which may
  * in turn pull in a lot of standard library code. In resource-constrained

@@ -118,7 +118,7 @@
 
 /* MEM_SIZE: the size of the heap memory. If the application will send
 a lot of data that needs to be copied, this should be set high. */
-#define MEM_SIZE               10240
+#define MEM_SIZE               1024*1024*16
 
 /* MEMP_NUM_PBUF: the number of memp struct pbufs. If the application
    sends a lot of data out of ROM (or other static memory), this
@@ -323,12 +323,16 @@ void lwip_platform_assert(const char *msg, int line, const char *file);
 #define LWIP_PLATFORM_ASSERT(x) lwip_platform_assert(x, __LINE__, __FILE__)
 #endif
 
-#include <stdint.h>
-
-extern uint8_t *ram_heap;
-
-#define LWIP_RAM_HEAP_POINTER ram_heap
-
-#define MEMP_MEM_MALLOC 1
+#ifndef LWIP_PLATFORM_DIAG
+#if __ANDROID__
+#include <stdio.h>
+#include <android/log.h>
+#define LOG_DEBUG(...) \
+  __android_log_print(ANDROID_LOG_DEBUG, "lwip", __VA_ARGS__)
+#define LOG_ERROR(...) \
+  __android_log_print(ANDROID_LOG_ERROR, "lwip", __VA_ARGS__)
+#define LWIP_PLATFORM_DIAG(x) LOG_DEBUG x
+#endif
+#endif
 
 #endif /* LWIP_LWIPOPTS_H */
