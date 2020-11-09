@@ -123,19 +123,19 @@ a lot of data that needs to be copied, this should be set high. */
 /* MEMP_NUM_PBUF: the number of memp struct pbufs. If the application
    sends a lot of data out of ROM (or other static memory), this
    should be set high. */
-#define MEMP_NUM_PBUF           16
+#define MEMP_NUM_PBUF           1024
 /* MEMP_NUM_RAW_PCB: the number of UDP protocol control blocks. One
    per active RAW "connection". */
-#define MEMP_NUM_RAW_PCB        3
+#define MEMP_NUM_RAW_PCB        100
 /* MEMP_NUM_UDP_PCB: the number of UDP protocol control blocks. One
    per active UDP "connection". */
 #define MEMP_NUM_UDP_PCB        8
 /* MEMP_NUM_TCP_PCB: the number of simulatenously active TCP
    connections. */
-#define MEMP_NUM_TCP_PCB        5
+#define MEMP_NUM_TCP_PCB        256
 /* MEMP_NUM_TCP_PCB_LISTEN: the number of listening TCP
    connections. */
-#define MEMP_NUM_TCP_PCB_LISTEN 8
+#define MEMP_NUM_TCP_PCB_LISTEN 16
 /* MEMP_NUM_TCP_SEG: the number of simultaneously queued TCP
    segments. */
 #define MEMP_NUM_TCP_SEG        16
@@ -187,10 +187,10 @@ a lot of data that needs to be copied, this should be set high. */
 #define TCP_QUEUE_OOSEQ         1
 
 /* TCP Maximum segment size. */
-#define TCP_MSS                 1024
+#define TCP_MSS                 8192
 
 /* TCP sender buffer space (bytes). */
-#define TCP_SND_BUF             2048
+#define TCP_SND_BUF             16384
 
 /* TCP sender buffer space (pbufs). This must be at least = 2 *
    TCP_SND_BUF/TCP_MSS for things to work. */
